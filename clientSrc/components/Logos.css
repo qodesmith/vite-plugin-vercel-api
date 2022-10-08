@@ -15,12 +15,18 @@
   will-change: filter;
   transition: filter 0.25s;
 }
+
 .logo:hover {
   transition: filter 0.1s;
   filter: drop-shadow(0 0 0.75em #646cffaa) drop-shadow(0 0 0.75em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 0.75em #61dafbaa) drop-shadow(0 0 0.75em #61dafbaa);
+}
+
+.logo.vercel:hover {
+  filter: drop-shadow(0 0 0.75em #fff);
 }
 
 @keyframes logo-spin {

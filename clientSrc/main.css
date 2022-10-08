@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -46,6 +50,13 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+hr {
+  border-width: 1px;
+  border-top-width: 0px;
+  border-color: #888;
+  margin: 1em 0;
 }
 
 @media (prefers-color-scheme: light) {
