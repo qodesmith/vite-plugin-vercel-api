@@ -1,12 +1,10 @@
-import path from 'node:path'
-import fs from 'node:fs'
 import reqQueryMiddleware from './middlewareHelpers/reqQueryMiddleware'
 import reqCookiesMiddleware from './middlewareHelpers/reqCookiesMiddleware'
 import resStatusMiddleware from './middlewareHelpers/resStatusMiddleware'
 import resJsonMiddleware from './middlewareHelpers/resJsonMiddleware'
 import resSendMiddleware from './middlewareHelpers/resSendMiddleware'
 import resRedirectMiddleware from './middlewareHelpers/resRedirect'
-// import addApiRoutesMiddleware from './addApiRoutesMiddleware'
+import addApiRoutesMiddleware from './addApiRoutesMiddleware'
 import type {PluginOption} from 'vite'
 import reqBodyMiddleware from './middlewareHelpers/reqBodyMiddleware'
 
@@ -67,10 +65,7 @@ export default function vercelApiPlugin(): PluginOption {
       // Vercel-like `/api` functionality as middleware //
       ////////////////////////////////////////////////////
 
-      const apiPath = path.resolve('./api')
-      if (!fs.existsSync(apiPath)) return
-
-      // await addApiRoutesMiddleware(devServer)
+      await addApiRoutesMiddleware(devServer)
     },
   }
 }
