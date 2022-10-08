@@ -41,7 +41,7 @@ export default function vercelApiPlugin(): PluginOption {
         Adds a `req.body` object populated from fetch POST requests which
         contain a body.
       */
-      devServer.middlewares.use(reqBodyMiddleware)
+      reqBodyMiddleware(devServer)
 
       // Adds a `req.query` object populated from the URL's query params
       devServer.middlewares.use(reqQueryMiddleware)

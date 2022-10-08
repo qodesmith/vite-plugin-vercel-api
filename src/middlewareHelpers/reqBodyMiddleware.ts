@@ -1,5 +1,4 @@
-import type {VercelRequest, VercelResponse} from '@vercel/node'
-import type {Connect} from 'vite/dist/node'
+import type {ViteDevServer} from 'vite'
 import bodyParser from 'body-parser'
 
 /**
@@ -26,17 +25,13 @@ import bodyParser from 'body-parser'
  * Header - {'Content-Type': 'application/x-www-form-urlencoded'}
  *
  */
-export default function reqBodyMiddleware(
-  req: VercelRequest,
-  res: VercelResponse,
-  next: Connect.NextFunction
-) {
-  const bodyMiddlewares = [
+export default function reqBodyMiddleware(devServer: ViteDevServer) {
+  ;[
     bodyParser.json(),
     bodyParser.raw(),
     bodyParser.text(),
     bodyParser.urlencoded({extended: false}),
-  ]
-
-  bodyMiddlewares.forEach(middleware => middleware(req, res, next))
+  ].forEach(middleware => {
+    devServer.middlewares.use(middleware)
+  })
 }
