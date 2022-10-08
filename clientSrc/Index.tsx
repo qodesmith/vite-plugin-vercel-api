@@ -1,6 +1,7 @@
 import Logos from './components/Logos'
 import Page from './components/Page'
 import './Index.css'
+import {Link} from 'react-router-dom'
 
 export default function Index() {
   return (
@@ -16,6 +17,10 @@ export default function Index() {
           directory as your back end routes like Vercel for use with Vercel
           Serverless Functions.
         </div>
+
+        <hr />
+
+        <Link to="/cars">Cars</Link>
       </Page>
     </>
   )
