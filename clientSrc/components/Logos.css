@@ -13,12 +13,14 @@
 .logo {
   height: 2em;
   will-change: filter;
+  transition: filter 0.25s;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  transition: filter 0.1s;
+  filter: drop-shadow(0 0 0.75em #646cffaa) drop-shadow(0 0 0.75em #646cffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 0.75em #61dafbaa) drop-shadow(0 0 0.75em #61dafbaa);
 }
 
 @keyframes logo-spin {

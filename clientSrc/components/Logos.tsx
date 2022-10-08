@@ -11,8 +11,15 @@ export default function Logos() {
         <a href="https://reactjs.org" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
+        <a href="https://vercel.com" target="_blank">
+          <img
+            src="/vercel-icon-light.svg"
+            className="logo vercel"
+            alt="Vercel logo"
+          />
+        </a>
       </div>
-      <div>Vite + React + Vite</div>
+      <div>Vite + React + Vercel</div>
     </div>
   )
 }
