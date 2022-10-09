@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import Index from './Index'
 import './main.css'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import Cars from './components/Cars'
 
 const router = createBrowserRouter([
   {
@@ -11,7 +12,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/cars',
-    element: <div>cars!</div>,
+    element: <Cars />,
+    loader: () => fetch('/api/cars'),
   },
 ])
 
