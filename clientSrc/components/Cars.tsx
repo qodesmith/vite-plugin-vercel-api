@@ -58,8 +58,6 @@ export default function Cars() {
   if (carModel) route += `/${carModel}`
   if (carYear) route += `/${carYear}`
 
-  console.log('render')
-
   useEffect(() => {
     if (route === '/api/cars') return setDataSet(fullData)
 

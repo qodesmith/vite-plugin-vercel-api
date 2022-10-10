@@ -201,7 +201,6 @@ function addApiRoutes(apiData: ApiDataType, devServer: ViteDevServer) {
             .replace(route, '')
             .split('/')
             .filter(Boolean)
-          console.log({[route]: pathSegments, pathname: url.pathname})
           const routeData = (() => {
             switch (true) {
               case pathSegments.length === 0:
