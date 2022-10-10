@@ -42,3 +42,8 @@
   font-size: 0.7rem;
   padding-left: 0.5em;
 }
+
+.cars-table-container .displayed-route {
+  color: aqua;
+  margin-bottom: 1em;
+}

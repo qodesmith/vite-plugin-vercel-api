@@ -10,7 +10,10 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import './Cars.css'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
+import CarSearch from './CarSearch'
+import {useRecoilValue} from 'recoil'
+import {carSearchSelectionsAtom} from '../state/recoilState'
 
 const columnHelper = createColumnHelper<CarType>()
 const columns = [
@@ -33,16 +36,37 @@ const columns = [
 ]
 
 export default function Cars() {
-  const {data} = useLoaderData() as {data: CarType[]}
+  const {data: fullData} = useLoaderData() as {data: CarType[]}
+  const [dataSet, setDataSet] = useState<CarType[]>(fullData)
   const [sorting, setSorting] = useState<SortingState>([])
   const table = useReactTable({
-    data,
+    data: dataSet,
     columns,
     state: {sorting},
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
   })
+  const {
+    make: carMake,
+    model: carModel,
+    year: carYear,
+  } = useRecoilValue(carSearchSelectionsAtom)
+
+  let route = '/api/cars'
+  if (carMake) route += `/${carMake}`
+  if (carModel) route += `/${carModel}`
+  if (carYear) route += `/${carYear}`
+
+  console.log('render')
+
+  useEffect(() => {
+    if (route === '/api/cars') return setDataSet(fullData)
+
+    // fetch(route).then(res => res.json()).then(newDataSet => {
+    //   setDataSet(newDataSet)
+    // })
+  }, [route])
 
   return (
     <Page>
@@ -50,7 +74,44 @@ export default function Cars() {
 
       <hr />
 
+      <div className="cars-search-container">
+        <div>
+          Using this search bar will trigger fetch calls to different endpoints
+          located in the <code>/api</code> directory. This is done on purpose so
+          we can test that the different api "
+          <a
+            href="https://nextjs.org/docs/api-routes/dynamic-api-routes"
+            target="_blank">
+            file types
+          </a>
+          " are working properly. Those file types are:
+          <ul>
+            <li>
+              <code>cars.ts</code> - explicit
+            </li>
+            <li>
+              <code>[carMake].ts</code> - dynamic
+            </li>
+            <li>
+              <code>[...slug].ts</code> - catchAll
+            </li>
+            <li>
+              <code>[[...slug]].ts</code> - optionalCatchAll
+            </li>
+          </ul>
+        </div>
+        <CarSearch data={fullData} />
+      </div>
+
+      <hr />
+
       <div className="cars-table-container">
+        <div className="displayed-route">
+          Current data route:{' '}
+          <code>
+            <strong>{route}</strong>
+          </code>
+        </div>
         <table className="cars-table">
           <thead>
             {table.getHeaderGroups().map(headerGroup => (

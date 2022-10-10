@@ -4,6 +4,7 @@ import Index from './Index'
 import './main.css'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Cars from './components/Cars'
+import {RecoilRoot} from 'recoil'
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
   </React.StrictMode>
 )
