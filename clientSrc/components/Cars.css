@@ -1,0 +1,49 @@
+.cars-table-container {
+  padding: 0 2em;
+}
+
+.cars-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cars-table thead th {
+  text-align: initial;
+  font-size: 1.4em;
+}
+
+.cars-table tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.cars-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.cars-table tbody td {
+  padding: 0.5em;
+}
+
+.cars-table-sorter-icon {
+  font-size: initial;
+  padding-left: 0.5em;
+}
+
+.cars-table-col-header.asc::after {
+  content: '🔼';
+  position: absolute;
+  font-size: 0.7rem;
+  padding-left: 0.5em;
+}
+
+.cars-table-col-header.desc::after {
+  content: '🔽';
+  position: absolute;
+  font-size: 0.7rem;
+  padding-left: 0.5em;
+}
+
+.cars-table-container .displayed-route {
+  color: aqua;
+  margin-bottom: 1em;
+}

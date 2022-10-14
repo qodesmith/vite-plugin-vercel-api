@@ -1,0 +1,45 @@
+.logos-container {
+  text-align: center;
+  margin-left: auto;
+  display: table;
+}
+
+.logo-links {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
+.logo {
+  height: 2em;
+  will-change: filter;
+  transition: filter 0.25s;
+}
+
+.logo:hover {
+  transition: filter 0.1s;
+  filter: drop-shadow(0 0 0.75em #646cffaa) drop-shadow(0 0 0.75em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 0.75em #61dafbaa) drop-shadow(0 0 0.75em #61dafbaa);
+}
+
+.logo.vercel:hover {
+  filter: drop-shadow(0 0 0.75em #fff);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}

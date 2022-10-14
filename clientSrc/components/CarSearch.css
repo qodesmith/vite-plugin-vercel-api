@@ -1,0 +1,10 @@
+.car-search-container {
+  display: flex;
+  gap: 2em;
+}
+
+.car-search-container section {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
