@@ -61,9 +61,11 @@ export default function Cars() {
   useEffect(() => {
     if (route === '/api/cars') return setDataSet(fullData)
 
-    // fetch(route).then(res => res.json()).then(newDataSet => {
-    //   setDataSet(newDataSet)
-    // })
+    fetch(route)
+      .then(res => res.json())
+      .then(newDataSet => {
+        // setDataSet(newDataSet)
+      })
   }, [route])
 
   return (
