@@ -59,6 +59,10 @@ hr {
   margin: 1em 0;
 }
 
+strong {
+  font-weight: bold;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

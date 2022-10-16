@@ -10,12 +10,22 @@ export default function Index() {
       <Page>
         <h1>vite-plugin-vercel-api</h1>
         <div className="plugin-explanation">
-          A Vite plugin that let's you use the{' '}
+          A Vite plugin that parses the{' '}
           <code>
             <strong>/api</strong>
           </code>{' '}
-          directory as your back end routes like Vercel for use with Vercel
-          Serverless Functions.
+          directory just like Vercel does in production for use with{' '}
+          <a href="https://vercel.com/docs/concepts/functions/serverless-functions">
+            Serverless Functions
+          </a>
+          . It let's you continue to spin up your Vite app locally with a back
+          end - no need to run{' '}
+          <code>
+            <a href="https://vercel.com/docs/cli/dev">
+              <strong>vercel dev</strong>
+            </a>
+          </code>
+          .
         </div>
 
         <hr />
