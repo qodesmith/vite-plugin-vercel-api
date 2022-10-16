@@ -25,7 +25,7 @@ import bodyParser from 'body-parser'
  * Header - {'Content-Type': 'application/x-www-form-urlencoded'}
  *
  */
-export default function reqBodyMiddleware(devServer: ViteDevServer) {
+export default function addReqBodyMiddleware(devServer: ViteDevServer) {
   ;[
     bodyParser.json(),
     bodyParser.raw(),
