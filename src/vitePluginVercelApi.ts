@@ -1,12 +1,13 @@
-import reqQueryMiddleware from './middlewareHelpers/reqQueryMiddleware'
-import reqCookiesMiddleware from './middlewareHelpers/reqCookiesMiddleware'
-import resStatusMiddleware from './middlewareHelpers/resStatusMiddleware'
-import resJsonMiddleware from './middlewareHelpers/resJsonMiddleware'
-import resSendMiddleware from './middlewareHelpers/resSendMiddleware'
-import resRedirectMiddleware from './middlewareHelpers/resRedirect'
-import addApiRoutesMiddleware from './addApiRoutesMiddleware'
 import type {PluginOption} from 'vite'
-import reqBodyMiddleware from './middlewareHelpers/reqBodyMiddleware'
+import express from 'express'
+import createRoutesAndHandlers from './createRoutesAndHandlers'
+import type {RequestHandler} from 'express'
+import addReqBodyMiddleware from './middlewareHelpers/addReqBodyMiddleware'
+import reqCookiesMiddleware from './middlewareHelpers/reqCookiesMiddleware'
+
+export type VitePluginVercelApiOptionsType = {
+  apiDir?: string
+}
 
 /**
  *
@@ -32,43 +33,53 @@ import reqBodyMiddleware from './middlewareHelpers/reqBodyMiddleware'
  * serverless functions.
  *
  */
-export default function vercelApiPlugin(): PluginOption {
+export default function vercelApiPlugin(
+  options: VitePluginVercelApiOptionsType = {}
+): PluginOption {
   return {
     name: 'vite-plugin-vercel-api',
     async configureServer(devServer) {
-      ////////////////////////////////////
-      // Vercel-link middleware helpers //
-      ////////////////////////////////////
+      const routesAndHandlers = await createRoutesAndHandlers({
+        apiDir: options.apiDir ?? 'api',
+      })
+
+      // Do nothing if the user doesn't have back end routes to parse.
+      if (routesAndHandlers.length === 0) return
+
+      // Express will handle all our routing and most of our middleware.
+      const app = express()
 
       /*
-        Adds a `req.body` object populated from fetch POST requests which
-        contain a body.
+        Vercel doesn't parse path params the same way Express does. Instead,
+        Vercel populates `req.query` with those values. In the case of a clash
+        between a path segment (param) and a query (i.e. /:name?name=qodesmith),
+        Vercel prioritizes the path segment value. This middleware will move
+        Express' req.params values to req.query, mimicing Vercel in production.
       */
-      reqBodyMiddleware(devServer)
+      const paramsToQueryMiddleware: RequestHandler = (req, res, next) => {
+        req.query = {...req.query, ...req.params}
+        next()
+      }
 
-      // Adds a `req.query` object populated from the URL's query params
-      devServer.middlewares.use(reqQueryMiddleware)
+      // Add all the routes to our Express app.
+      routesAndHandlers.forEach(({route, handler}) => {
+        app.use(route, paramsToQueryMiddleware, handler)
+      })
 
-      // Adds a `req.cookies` object populated from the header.
-      devServer.middlewares.use(reqCookiesMiddleware)
+      // Add middleware that express doesn't give us out of the box.
+      addReqBodyMiddleware(devServer) // req.body
+      devServer.middlewares.use(reqCookiesMiddleware) // req.cookies
 
-      // Adds a `res.status(...)` function that sets the HTTP status code.
-      devServer.middlewares.use(resStatusMiddleware)
+      /*
+        Instead of trying to figure out how to directly map each handler to the
+        Vercel path syntax (i.e. /api/[first]/[second]), it's easier to convert
+        the Vercel path syntax to Express path syntax (i.e. /api/:first/:seconf)
+        and add route handlers to an Express app. Then we use the entire Express
+        app as middleware to the Vite devServer. #winWin
+      */
+      devServer.middlewares.use(app)
 
-      // Adds a `res.json({...})` function that sends a JSON response.
-      devServer.middlewares.use(resJsonMiddleware)
-
-      // Adds a `res.send(...)` function that sends a string, JSON, or buffer.
-      devServer.middlewares.use(resSendMiddleware)
-
-      // Adds a `res.redirect('/url')` function to redirect requests.
-      devServer.middlewares.use(resRedirectMiddleware)
-
-      ////////////////////////////////////////////////////
-      // Vercel-like `/api` functionality as middleware //
-      ////////////////////////////////////////////////////
-
-      await addApiRoutesMiddleware(devServer)
+      // TODO: rebuild `/api` files when they are added, removed, or changed.
     },
   }
 }
