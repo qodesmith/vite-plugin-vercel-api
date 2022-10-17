@@ -47,3 +47,8 @@
   color: aqua;
   margin-bottom: 1em;
 }
+
+.vercel-not-supported {
+  color: red;
+  font-size: 0.7em;
+}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Suspense} from 'react'
 import ReactDOM from 'react-dom/client'
 import Index from './Index'
 import './main.css'
@@ -14,7 +14,6 @@ const router = createBrowserRouter([
   {
     path: '/cars',
     element: <Cars />,
-    loader: () => fetch('/api/cars'),
   },
 ])
 
