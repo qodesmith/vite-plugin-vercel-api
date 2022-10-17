@@ -1,45 +1,44 @@
-import {useMemo} from 'react'
-import {CarType} from '../../api/cars'
+import {Suspense, useMemo} from 'react'
 import './CarSearch.css'
-import {carSearchSelectionsAtom} from '../state/recoilState'
-import {useRecoilState} from 'recoil'
+import {
+  carMakeSelector,
+  carModelSelector,
+  carsFullDataSelector,
+  carYearSelector,
+} from '../state/recoilState'
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil'
 
-type CarSearchProps = {
-  data: CarType[]
-}
-
-export default function CarSearch({data}: CarSearchProps) {
-  const [searchState, setSearchState] = useRecoilState(carSearchSelectionsAtom)
-  const {make, model, year} = searchState
-  // const [make, setMake] = useRecoilState(carMakeAtom)
-  // const [model, setModel] = useRecoilState(carModelAtom)
-  // const [year, setYear] = useRecoilState(carYearAtom)
+function CarSearchBody() {
+  const fullData = useRecoilValue(carsFullDataSelector)
+  const [make, setMake] = useRecoilState(carMakeSelector)
+  const [model, setModel] = useRecoilState(carModelSelector)
+  const setYear = useSetRecoilState(carYearSelector)
 
   const makes = useMemo(() => {
-    return Array.from(new Set(data.map(car => car.make))).sort()
-  }, [data])
+    return Array.from(new Set(fullData.map(car => car.make))).sort()
+  }, [fullData])
 
   const models = useMemo(() => {
     if (!make) return []
 
-    const carModels = data.reduce((acc, car) => {
+    const carModels = fullData.reduce((acc, car) => {
       if (car.make === make) acc.add(car.model)
       return acc
     }, new Set([] as string[]))
 
     return Array.from(carModels).sort()
-  }, [make, data])
+  }, [make, fullData])
 
   const years = useMemo(() => {
     if (!model) return []
 
-    const carYears = data.reduce((acc, car) => {
+    const carYears = fullData.reduce((acc, car) => {
       if (car.make === make && car.model === model) acc.add(car.year)
       return acc
     }, new Set([] as number[]))
 
     return Array.from(carYears).sort((a, b) => a - b)
-  }, [make, model, data])
+  }, [make, model, fullData])
 
   return (
     <div className="car-search-container">
@@ -49,11 +48,7 @@ export default function CarSearch({data}: CarSearchProps) {
         <select
           id="make"
           onChange={e => {
-            setSearchState({
-              make: e.target.value,
-              model: '',
-              year: '',
-            })
+            setMake(e.target.value)
           }}>
           <option value="">--Select a make--</option>
           {makes.map(make => {
@@ -72,11 +67,7 @@ export default function CarSearch({data}: CarSearchProps) {
         <select
           id="model"
           onChange={e => {
-            setSearchState(prevState => ({
-              model: e.target.value,
-              make: prevState.make,
-              year: '',
-            }))
+            setModel(e.target.value)
           }}
           disabled={models.length === 0}>
           <option value="">--Select a model--</option>
@@ -96,19 +87,27 @@ export default function CarSearch({data}: CarSearchProps) {
         <select
           id="year"
           onChange={e => {
-            setSearchState(prevState => ({...prevState, year: e.target.value}))
+            setYear(e.target.value)
           }}
           disabled={years.length === 0}>
           <option value="">--Select a year--</option>
-          {years.map(year => {
+          {years.map(y => {
             return (
-              <option key={year} value={year}>
-                {year}
+              <option key={y} value={y}>
+                {y}
               </option>
             )
           })}
         </select>
       </section>
     </div>
+  )
+}
+
+export default function CarSearch() {
+  return (
+    <Suspense fallback={<div>Loading car search...</div>}>
+      <CarSearchBody />
+    </Suspense>
   )
 }

@@ -1,5 +1,4 @@
 import Page from './Page'
-import {useLoaderData, Link} from 'react-router-dom'
 import {CarType} from '../../api/cars'
 import {
   useReactTable,
@@ -10,63 +9,13 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import './Cars.css'
-import {useEffect, useState} from 'react'
 import CarSearch from './CarSearch'
 import {useRecoilValue} from 'recoil'
-import {carSearchSelectionsAtom} from '../state/recoilState'
-
-const columnHelper = createColumnHelper<CarType>()
-const columns = [
-  columnHelper.accessor('make', {
-    cell: info => info.getValue(),
-    header: () => 'Make',
-  }),
-  columnHelper.accessor('model', {
-    cell: info => info.getValue(),
-    header: () => 'Model',
-  }),
-  columnHelper.accessor('year', {
-    cell: info => info.getValue(),
-    header: () => 'Year',
-  }),
-  columnHelper.accessor('vin', {
-    cell: info => info.getValue(),
-    header: () => 'Vin',
-  }),
-]
+import {carsRouteSelector} from '../state/recoilState'
+import CarsTable from './CarsTable'
 
 export default function Cars() {
-  const {data: fullData} = useLoaderData() as {data: CarType[]}
-  const [dataSet, setDataSet] = useState<CarType[]>(fullData)
-  const [sorting, setSorting] = useState<SortingState>([])
-  const table = useReactTable({
-    data: dataSet,
-    columns,
-    state: {sorting},
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-  })
-  const {
-    make: carMake,
-    model: carModel,
-    year: carYear,
-  } = useRecoilValue(carSearchSelectionsAtom)
-
-  let route = '/api/cars'
-  if (carMake) route += `/${carMake}`
-  if (carModel) route += `/${carModel}`
-  if (carYear) route += `/${carYear}`
-
-  useEffect(() => {
-    if (route === '/api/cars') return setDataSet(fullData)
-
-    fetch(route)
-      .then(res => res.json())
-      .then(newDataSet => {
-        // setDataSet(newDataSet)
-      })
-  }, [route])
+  const route = useRecoilValue(carsRouteSelector)
 
   return (
     <Page>
@@ -93,14 +42,18 @@ export default function Cars() {
               <code>[carMake].ts</code> - dynamic
             </li>
             <li>
-              <code>[...slug].ts</code> - catchAll
+              <code>[...slug].ts</code> - <span className="red">*</span>catchAll
             </li>
             <li>
-              <code>[[...slug]].ts</code> - optionalCatchAll
+              <code>[[...slug]].ts</code> - <span className="red">*</span>
+              optionalCatchAll
             </li>
+            <div className="vercel-not-supported">
+              <em>Not supported on Vercel outside of Next.js applications.</em>
+            </div>
           </ul>
         </div>
-        <CarSearch data={fullData} />
+        <CarSearch />
       </div>
 
       <hr />
@@ -112,43 +65,7 @@ export default function Cars() {
             <strong>{route}</strong>
           </code>
         </div>
-        <table className="cars-table">
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  const sortDir = header.column.getIsSorted() as string
-
-                  return (
-                    <th key={header.id}>
-                      <div
-                        onClick={header.column.getToggleSortingHandler()}
-                        className={`cars-table-col-header ${sortDir}`}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </div>
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CarsTable />
       </div>
     </Page>
   )
