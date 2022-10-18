@@ -32,7 +32,7 @@ Or with `require` syntax:
 const {defineConfig} = require('vite')
 const vitePluginVercelApi = require('vite-plugin-vercel-api')
 
-export default defineConfig({
+module.exports = defineConfig({
   plugins: [vitePluginVercelApi()],
 })
 ```
