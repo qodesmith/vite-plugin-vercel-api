@@ -1,0 +1,7 @@
+api
+clientPublic
+clientSrc
+index.html
+tsconfig.json
+tsconfig.node.json
+vite.config.ts

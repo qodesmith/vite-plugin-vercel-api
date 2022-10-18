@@ -1,4 +1,4 @@
-import type {PluginOption} from 'vite'
+import type {Connect, PluginOption} from 'vite'
 import express from 'express'
 import createRoutesAndHandlers from './createRoutesAndHandlers'
 import type {RequestHandler} from 'express'
@@ -33,7 +33,7 @@ export type VitePluginVercelApiOptionsType = {
  * serverless functions.
  *
  */
-export default function vercelApiPlugin(
+export default function vitePluginVercelApi(
   options: VitePluginVercelApiOptionsType = {}
 ): PluginOption {
   return {
@@ -68,7 +68,9 @@ export default function vercelApiPlugin(
 
       // Add middleware that express doesn't give us out of the box.
       addReqBodyMiddleware(devServer) // req.body
-      devServer.middlewares.use(reqCookiesMiddleware) // req.cookies
+      devServer.middlewares.use(
+        reqCookiesMiddleware as Connect.NextHandleFunction
+      ) // req.cookies
 
       /*
         Instead of trying to figure out how to directly map each handler to the
@@ -80,6 +82,7 @@ export default function vercelApiPlugin(
       devServer.middlewares.use(app)
 
       // TODO: rebuild `/api` files when they are added, removed, or changed.
+      // TODO: do we need an option to prevent transforming require() calls?
     },
   }
 }

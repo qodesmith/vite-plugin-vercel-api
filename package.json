@@ -2,13 +2,12 @@
   "name": "vite-plugin-vercel-api",
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/main.js",
-  "module": "dist/main.mjs",
-  "types": "dist/main.d.ts",
+  "main": "dist/vitePluginVercelApi.cjs",
+  "module": "dist/vitePluginVercelApi.js",
+  "types": "dist/vitePluginVercelApi.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "rm -rf ./dist && tsup"
   },
   "devDependencies": {
     "@tanstack/react-table": "^8.5.15",
@@ -24,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2",
     "recoil": "^0.7.5",
+    "tsup": "^6.2.3",
     "typescript": "^4.6.4",
     "vite": "^3.1.0"
   },
