@@ -2,12 +2,12 @@
   "name": "vite-plugin-vercel-api",
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/main.js",
-  "module": "dist/main.mjs",
-  "types": "dist/main.d.ts",
+  "main": "dist/vitePluginVercelApi.cjs",
+  "module": "dist/vitePluginVercelApi.js",
+  "types": "dist/vitePluginVercelApi.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsup src/vitePluginVercelApi.ts --dts --sourcemap --format esm,cjs"
+    "build": "rm -rf ./dist && tsup"
   },
   "devDependencies": {
     "@tanstack/react-table": "^8.5.15",

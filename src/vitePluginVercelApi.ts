@@ -82,6 +82,7 @@ export default function vitePluginVercelApi(
       devServer.middlewares.use(app)
 
       // TODO: rebuild `/api` files when they are added, removed, or changed.
+      // TODO: do we need an option to prevent transforming require() calls?
     },
   }
 }
