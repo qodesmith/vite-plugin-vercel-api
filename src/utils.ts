@@ -1,4 +1,5 @@
 import path from 'node:path'
+import chalk from 'chalk'
 
 export function filePathToRoute(filePath: string): string {
   const {dir, name: nameWithoutExt} = path.parse(filePath)
@@ -7,7 +8,7 @@ export function filePathToRoute(filePath: string): string {
     if (nameWithoutExt === 'index') return
     if (routeType === 'dynamic') return `:${nameWithoutExt.slice(1, -1)}`
     if (routeType === 'catchAll' || routeType === 'optionalCatchAll') {
-      throw createRouteTypeError(nameWithoutExt)
+      throw createRouteTypeError({segment: nameWithoutExt, itemPath: filePath})
     }
 
     return nameWithoutExt
@@ -20,7 +21,9 @@ export function filePathToRoute(filePath: string): string {
       const routeType = getRouteType(segment)
 
       if (routeType === 'catchAll' || routeType === 'optionalCatchAll') {
-        throw createRouteTypeError(segment)
+        const prePath = filePath.slice(0, filePath.indexOf(segment))
+        const segmentPath = `${prePath}${segment}`
+        throw createRouteTypeError({segment, itemPath: segmentPath})
       }
 
       if (routeType === 'dynamic') {
@@ -42,8 +45,21 @@ function getRouteType(str: string): RouteType {
   return 'explicit'
 }
 
-function createRouteTypeError(str: string): Error {
-  const errorMessage = `Catch all routes are not supported - ${str}`
+type CreateRouteTypeErrorInputType = {
+  segment: string
+  itemPath: string
+}
+
+function createRouteTypeError({
+  segment,
+  itemPath,
+}: CreateRouteTypeErrorInputType): Error {
+  const projectPath = itemPath.replace(process.cwd(), '')
+  const redPath = chalk.red(
+    projectPath.replace(segment, chalk.red.bold(segment))
+  )
+  const message = chalk.red('Catch all routes are not supported -')
+  const errorMessage = `${message} ${redPath}`
 
   // Log this to the console so the user can see.
   console.error(errorMessage)
