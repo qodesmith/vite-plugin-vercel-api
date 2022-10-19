@@ -16,6 +16,12 @@
   "bugs": {
     "url": "https://github.com/qodesmith/vite-plugin-vercel-api/issues"
   },
+  "keywords": [
+    "vite",
+    "plugin",
+    "vercel",
+    "api"
+  ],
   "devDependencies": {
     "@tanstack/react-table": "^8.5.15",
     "@types/body-parser": "^1.19.2",
