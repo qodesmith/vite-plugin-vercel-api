@@ -15,6 +15,10 @@ Please note that Vercel `/api` features do NOT have parity with Next.js `/pages/
 
 See https://vercel.com/docs/runtimes#official-runtimes/node-js/node-js-request-and-response-objects for what middleware Vercel exposes on the request and response objects in serverless functions.
 
+## Installation
+
+`npm i -D vite-plugin-vercel-api`
+
 ## Usage
 
 ```javascript
@@ -36,3 +40,21 @@ module.exports = defineConfig({
   plugins: [vitePluginVercelApi()],
 })
 ```
+
+## Options
+
+### `apiDir`
+
+Vercel looks for files in the `api` directory. This plugin will also default to looking for an `api` folder. If you want to direct this plugin to process a differnt folder, this is the option for you.
+
+### `debugOptions`
+
+This option will log values and errors of the build process to the console. This is a good way to debug what's happening under the hood. Using this option will override the config with `clearScreen: true`.
+
+- `true` - shorthand for including all logging options.
+- `'apiFiles'` - log the files used for api endpoints.
+- `'apiPath'` - log the path used for the api.
+- `'apiRoutes'` - log the routes constructed for Express.
+- `'buildResults'` - log the esbuild results. Uses console.log which does _not_ log deeply nested object values.
+- `'buildResultsDeep'` - log the esbuild results. Uses console.dir which _does_ log deeply nested object values. _NOTE: this can lead to large logs in the console!_
+- `'failedRouteImports'` - log errors encountered with dynamically importing the route handler files.
