@@ -1,7 +1,7 @@
 import type {Connect, PluginOption} from 'vite'
+import type {RequestHandler} from 'express'
 import express from 'express'
 import createRoutesAndHandlers from './createRoutesAndHandlers'
-import type {RequestHandler} from 'express'
 import addReqBodyMiddleware from './middlewareHelpers/addReqBodyMiddleware'
 import reqCookiesMiddleware from './middlewareHelpers/reqCookiesMiddleware'
 

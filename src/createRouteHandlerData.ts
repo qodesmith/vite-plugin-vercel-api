@@ -1,6 +1,6 @@
+import type {CreateRoutesAndHandlersInputType} from './createRoutesAndHandlers'
 import esbuild from 'esbuild'
 import pico from 'picocolors'
-import {CreateRoutesAndHandlersInputType} from './createRoutesAndHandlers'
 import {errorLogger} from './logger'
 import {filePathToRoute, RouteError} from './utils'
 
