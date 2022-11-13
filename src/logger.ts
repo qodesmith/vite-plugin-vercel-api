@@ -1,10 +1,21 @@
 import pico from 'picocolors'
 
-export default function logger(message: string) {
-  const date = new Date()
-  const timeStr = date.toLocaleTimeString()
-  const grayTime = pico.dim(timeStr)
-  const cyanName = pico.cyan(pico.bold('[vitePluginVercelApi]'))
+type LogParams = Parameters<typeof console.log>
+type LogType = 'error' | 'info'
 
-  console.log(`${grayTime} ${cyanName} ${message}`)
+export function logger(...messages: LogParams) {
+  log('info', messages)
+}
+
+export function errorLogger(...messages: LogParams) {
+  log('error', messages)
+}
+
+function log(type: LogType, messages: LogParams) {
+  const timeStr = new Date().toLocaleTimeString()
+  const grayTime = pico.dim(timeStr)
+  const colorFn = type === 'error' ? pico.red : pico.cyan
+  const pluginName = colorFn(pico.bold('[vitePluginVercelApi]'))
+
+  console.log(grayTime, pluginName, ...messages)
 }
