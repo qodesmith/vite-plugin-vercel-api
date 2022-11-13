@@ -1,5 +1,6 @@
 import path from 'node:path'
-import chalk from 'chalk'
+import pico from 'picocolors'
+import logger from './logger'
 
 export function filePathToRoute(filePath: string): string {
   const {dir, name: nameWithoutExt} = path.parse(filePath)
@@ -55,14 +56,14 @@ function createRouteTypeError({
   itemPath,
 }: CreateRouteTypeErrorInputType): Error {
   const projectPath = itemPath.replace(process.cwd(), '')
-  const redPath = chalk.red(
-    projectPath.replace(segment, chalk.red.bold(segment))
+  const redPath = pico.red(
+    projectPath.replace(segment, pico.red(pico.bold(segment)))
   )
-  const message = chalk.red('Catch all routes are not supported -')
+  const message = pico.red('Catch all routes are not supported -')
   const errorMessage = `${message} ${redPath}`
 
   // Log this to the console so the user can see.
-  console.error(errorMessage)
+  logger(errorMessage)
 
   // This error will be caught in a try catch and not stop the process.
   return new Error(errorMessage)
