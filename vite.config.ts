@@ -4,7 +4,6 @@ import vitePluginVercelApi from './src/vitePluginVercelApi'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), vitePluginVercelApi()],
-  clearScreen: false,
+  plugins: [react(), vitePluginVercelApi({debugOptions: true})],
   publicDir: 'clientPublic',
 })

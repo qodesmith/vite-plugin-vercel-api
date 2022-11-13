@@ -1,0 +1,28 @@
+diff --git a/node_modules/vite/dist/node/chunks/dep-c842e491.js b/node_modules/vite/dist/node/chunks/dep-c842e491.js
+index d057cf5..58ffe60 100644
+--- a/node_modules/vite/dist/node/chunks/dep-c842e491.js
++++ b/node_modules/vite/dist/node/chunks/dep-c842e491.js
+@@ -63523,11 +63523,6 @@ async function resolveConfig(inlineConfig, command, defaultMode = 'development')
+             configFileDependencies = loadResult.dependencies;
+         }
+     }
+-    // Define logger
+-    const logger = createLogger(config.logLevel, {
+-        allowClearScreen: config.clearScreen,
+-        customLogger: config.customLogger
+-    });
+     // user config may provide an alternative mode. But --mode has a higher priority
+     mode = inlineConfig.mode || config.mode || mode;
+     configEnv.mode = mode;
+@@ -63598,6 +63593,11 @@ async function resolveConfig(inlineConfig, command, defaultMode = 'development')
+         // in case default mode was not production and is overwritten
+         process.env.NODE_ENV = 'production';
+     }
++    // Define logger
++    const logger = createLogger(config.logLevel, {
++      allowClearScreen: config.clearScreen,
++      customLogger: config.customLogger
++    });
+     // resolve public base url
+     const isBuild = command === 'build';
+     const relativeBaseShortcut = config.base === '' || config.base === './';

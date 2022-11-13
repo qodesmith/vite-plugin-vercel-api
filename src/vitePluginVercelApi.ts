@@ -1,13 +1,47 @@
 import type {Connect, PluginOption} from 'vite'
+import type {RequestHandler} from 'express'
 import express from 'express'
 import createRoutesAndHandlers from './createRoutesAndHandlers'
-import type {RequestHandler} from 'express'
 import addReqBodyMiddleware from './middlewareHelpers/addReqBodyMiddleware'
 import reqCookiesMiddleware from './middlewareHelpers/reqCookiesMiddleware'
 
 export type VitePluginVercelApiOptionsType = {
+  /**
+   * The directory, relative to the project root, which contains the api
+   * endpoints. Defaults to `'api'`.
+   */
   apiDir?: string
+
+  /**
+   * Log a variety of results and errors happening under the hood. Using this option will override the config with `clearScreen: true`.
+   *
+   * `true` - shorthand for including all logging options.
+   *
+   * `'apiFiles'` - log the files used for api endpoints.
+   *
+   * `'apiPath'` - log the path used for the api.
+   *
+   * `'apiRoutes'` - log the routes constructed for Express.
+   *
+   * `'buildResults'` - log the esbuild results. Uses console.log which does *not* log deeply nested object values.
+   *
+   * `'buildResultsDeep'` - log the esbuild results. Uses console.dir which *does* log deeply nested object values. *NOTE: this can lead to large logs in the console!*
+   *
+   * `'failedRouteImports'` - log errors encountered with dynamically importing the route handler files.
+   */
+  debugOptions?: DebuggerOptionsType | boolean | null
 }
+
+const allDebuggerOptionNames = [
+  'apiFiles',
+  'apiPath',
+  'apiRoutes',
+  'buildResults',
+  'buildResultsDeep',
+  'failedRouteImports',
+] as const
+export type DebuggerOptionsType = typeof allDebuggerOptionNames[number][]
+export type DebugNamesType = Set<DebuggerOptionsType[number]>
 
 /**
  *
@@ -36,11 +70,22 @@ export type VitePluginVercelApiOptionsType = {
 export default function vitePluginVercelApi(
   options: VitePluginVercelApiOptionsType = {}
 ): PluginOption {
+  const {debugOptions} = options
+
   return {
     name: 'vite-plugin-vercel-api',
     async configureServer(devServer) {
+      const debugNames: DebugNamesType = (() => {
+        if (debugOptions === true) {
+          return new Set(allDebuggerOptionNames)
+        }
+        if (Array.isArray(debugOptions)) return new Set(debugOptions)
+        return new Set([])
+      })()
+
       const routesAndHandlers = await createRoutesAndHandlers({
         apiDir: options.apiDir ?? 'api',
+        debugNames,
       })
 
       // Do nothing if the user doesn't have back end routes to parse.
@@ -83,6 +128,12 @@ export default function vitePluginVercelApi(
 
       // TODO: rebuild `/api` files when they are added, removed, or changed.
       // TODO: do we need an option to prevent transforming require() calls?
+    },
+    config() {
+      // When we have debug options, we want to ensure they are seen in the console.
+      if (debugOptions) {
+        return {clearScreen: false}
+      }
     },
   }
 }
