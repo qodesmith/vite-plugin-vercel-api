@@ -8,7 +8,7 @@ import reqCookiesMiddleware from './middlewareHelpers/reqCookiesMiddleware'
 export type VitePluginVercelApiOptionsType = {
   /**
    * The directory, relative to the project root, which contains the api
-   * endpoints. Defaults to 'api'.
+   * endpoints. Defaults to `'api'`.
    */
   apiDir?: string
 
