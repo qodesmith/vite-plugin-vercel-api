@@ -1,13 +1,19 @@
 import esbuild from 'esbuild'
-import {filePathToRoute} from './utils'
+import pico from 'picocolors'
+import {CreateRoutesAndHandlersInputType} from './createRoutesAndHandlers'
+import {errorLogger} from './logger'
+import {filePathToRoute, RouteError} from './utils'
 
 type CreateRouteHandlerDataInputType = {
   buildResults: esbuild.BuildResult
   entryPoints: string[]
+  debugNames: CreateRoutesAndHandlersInputType['debugNames']
 }
+
 export default async function createRouteHandlerData({
   buildResults,
   entryPoints,
+  debugNames,
 }: CreateRouteHandlerDataInputType) {
   if (!buildResults.outputFiles) {
     throw new Error('No outputFiles found from ')
@@ -31,7 +37,25 @@ export default async function createRouteHandlerData({
         const route = filePathToRoute(absolutePath)
         return {route, handler: mod.default}
       })
-      .catch(() => null)
+      .catch(error => {
+        /*
+          Only log non-RouteErrors here. `filePathToRoute` above will throw a
+          RouteError (leading to this catch) but it will also log a message
+          indicating an unsupported route was found.
+        */
+        if (
+          debugNames.has('failedRouteImports') &&
+          !(error instanceof RouteError)
+        ) {
+          errorLogger(
+            pico.red(`Error dynamically importing file - ${entryPoints[i]}`),
+            '\n',
+            error.message
+          )
+        }
+
+        return null
+      })
   })
   const results = await Promise.all(promises)
 
