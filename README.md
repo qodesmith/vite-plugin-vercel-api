@@ -58,3 +58,19 @@ This option will log values and errors of the build process to the console. This
 - `'buildResults'` - log the esbuild results. Uses console.log which does _not_ log deeply nested object values.
 - `'buildResultsDeep'` - log the esbuild results. Uses console.dir which _does_ log deeply nested object values. _NOTE: this can lead to large logs in the console!_
 - `'failedRouteImports'` - log errors encountered with dynamically importing the route handler files.
+
+Example usage:
+
+```javascript
+import {defineConfig} from 'vite'
+import vitePluginVercelApi from 'vite-plugin-vercel-api'
+
+export default defineConfig({
+  plugins: [
+    vitePluginVercelApi({
+      apiDir: 'myApi',
+      debugOptions: ['apiFiles', 'buildResultsDeep', 'failedRouteImports'],
+    }),
+  ],
+})
+```
