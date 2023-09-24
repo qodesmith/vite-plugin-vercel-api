@@ -40,7 +40,7 @@ const allDebuggerOptionNames = [
   'buildResultsDeep',
   'failedRouteImports',
 ] as const
-export type DebuggerOptionsType = typeof allDebuggerOptionNames[number][]
+export type DebuggerOptionsType = (typeof allDebuggerOptionNames)[number][]
 export type DebugNamesType = Set<DebuggerOptionsType[number]>
 
 /**
@@ -120,7 +120,7 @@ export default function vitePluginVercelApi(
       /*
         Instead of trying to figure out how to directly map each handler to the
         Vercel path syntax (i.e. /api/[first]/[second]), it's easier to convert
-        the Vercel path syntax to Express path syntax (i.e. /api/:first/:seconf)
+        the Vercel path syntax to Express path syntax (i.e. /api/:first/:second)
         and add route handlers to an Express app. Then we use the entire Express
         app as middleware to the Vite devServer. #winWin
       */
